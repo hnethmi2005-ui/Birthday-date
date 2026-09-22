@@ -1,0 +1,378 @@
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport"
+content="width=device-width, initial-scale=1">
+
+<title>Babe's Birthday 💜</title>
+
+<style>
+* {
+  box-sizing: border-box;
+}
+
+body {
+  margin: 0;
+  min-height: 100vh;
+  padding: 20px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-family: Georgia, serif;
+  color: #7953a9;
+  background: linear-gradient(
+    135deg,
+    #f8f1ff,
+    #e9d8fd,
+    #f3e8ff
+  );
+}
+
+.card {
+  width: 100%;
+  max-width: 420px;
+  padding: 35px 24px;
+  border-radius: 30px;
+  background: #fffaff;
+  text-align: center;
+  box-shadow: 0 12px 35px #aa87cf44;
+  animation: appear 0.5s ease;
+}
+
+@keyframes appear {
+  from {
+    opacity: 0;
+    transform: translateY(15px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+h1 {
+  font-size: 30px;
+  color: #7953a9;
+}
+
+p {
+  line-height: 1.7;
+  color: #8665a8;
+}
+
+.emoji {
+  font-size: 55px;
+}
+
+button {
+  border: none;
+  border-radius: 30px;
+  background: #b69adc;
+  color: white;
+  padding: 15px 25px;
+  font-size: 16px;
+  margin: 8px 4px;
+  cursor: pointer;
+}
+
+button:active {
+  transform: scale(0.97);
+}
+
+.option {
+  display: block;
+  width: 100%;
+  background: #eadcf8;
+  color: #7953a9;
+  margin: 12px 0;
+}
+
+.option:focus {
+  background: #b69adc;
+  color: white;
+}
+
+input {
+  width: 100%;
+  padding: 15px;
+  border: 2px solid #d8bff2;
+  border-radius: 15px;
+  font-size: 18px;
+  margin: 15px 0;
+  background: #faf6ff;
+  color: #7953a9;
+}
+
+.page {
+  display: none;
+}
+
+.page.active {
+  display: block;
+  animation: appear 0.5s ease;
+}
+
+.small {
+  font-size: 13px;
+}
+</style>
+</head>
+
+<body>
+
+<div class="card">
+
+<!-- PAGE 1 -->
+
+<section class="page active" id="p1">
+
+<div class="emoji">💌</div>
+
+<h1>Hey, Birthday Boy! 🎂</h1>
+
+<p>
+I have a little birthday surprise
+planned just for you...
+</p>
+
+<p>
+Will you go on a birthday date with me?
+</p>
+
+<button onclick="show(2)">
+YES 💜
+</button>
+
+<button onclick="no()">
+NO 🥺
+</button>
+
+<p id="reply"></p>
+
+<p class="small">Made with love ♡</p>
+
+</section>
+
+
+<!-- PAGE 2 -->
+
+<section class="page" id="p2">
+
+<div class="emoji">🌷</div>
+
+<h1>Where should we go?</h1>
+
+<p>
+Choose our birthday adventure!
+</p>
+
+<button class="option"
+onclick="place('Romantic dinner')">
+🍝 Romantic dinner
+</button>
+
+<button class="option"
+onclick="place('Cute café')">
+☕ Cute café
+</button>
+
+<button class="option"
+onclick="place('Movie date')">
+🎬 Movie date
+</button>
+
+<button class="option"
+onclick="place('Beach date')">
+🌊 Beach date
+</button>
+
+<button class="option"
+onclick="place('Surprise date')">
+🎁 Surprise date
+</button>
+
+</section>
+
+
+<!-- PAGE 3 -->
+
+<section class="page" id="p3">
+
+<div class="emoji">📅</div>
+
+<h1>Choose our date</h1>
+
+<p>
+Which day are you free?
+</p>
+
+<input type="date" id="date">
+
+<button onclick="chooseDate()">
+Continue 💜
+</button>
+
+</section>
+
+
+<!-- PAGE 4 -->
+
+<section class="page" id="p4">
+
+<div class="emoji">⏰</div>
+
+<h1>What time?</h1>
+
+<p>
+Choose the perfect time for our date.
+</p>
+
+<button class="option"
+onclick="time('3:00 PM')">
+3:00 PM
+</button>
+
+<button class="option"
+onclick="time('5:00 PM')">
+5:00 PM
+</button>
+
+<button class="option"
+onclick="time('7:00 PM')">
+7:00 PM
+</button>
+
+<button class="option"
+onclick="time('8:00 PM')">
+8:00 PM
+</button>
+
+</section>
+
+
+<!-- PAGE 5 -->
+
+<section class="page" id="p5">
+
+<div class="emoji">🎂💜</div>
+
+<h1>IT'S A DATE!</h1>
+
+<p>
+Our birthday date is planned!
+</p>
+
+<p id="summary"></p>
+
+<p>
+I can't wait to celebrate
+your special day with you! 💜
+</p>
+
+<button onclick="share()">
+Send me your choices 💌
+</button>
+
+<p class="small">
+Send your choices so I can arrange our date.
+</p>
+
+</section>
+
+</div>
+
+
+<script>
+
+let chosenPlace = "";
+let chosenDate = "";
+let chosenTime = "";
+
+const dateInput =
+  document.getElementById("date");
+
+const today = new Date();
+const localToday =
+  today.getFullYear() + "-" +
+  String(today.getMonth()+1).padStart(2,"0") + "-" +
+  String(today.getDate()).padStart(2,"0");
+
+dateInput.min = localToday;
+
+function show(n) {
+  document.querySelectorAll(".page")
+    .forEach(page => {
+      page.classList.remove("active");
+    });
+
+  document.getElementById("p"+n)
+    .classList.add("active");
+}
+
+function no() {
+  document.getElementById("reply")
+    .textContent =
+    "Are you sure? Think again! 🥹💜";
+}
+
+function place(value) {
+  chosenPlace = value;
+  show(3);
+}
+
+function chooseDate() {
+  const value = dateInput.value;
+
+  if (!value) {
+    alert("Please choose a date! 💜");
+    return;
+  }
+
+  if (value < localToday) {
+    alert("Please choose a future date!");
+    return;
+  }
+
+  chosenDate = value;
+  show(4);
+}
+
+function time(value) {
+  chosenTime = value;
+
+  document.getElementById("summary")
+    .innerHTML =
+    "📍 " + chosenPlace + "<br>" +
+    "📅 " + chosenDate + "<br>" +
+    "⏰ " + chosenTime;
+
+  show(5);
+}
+
+function share() {
+  const message =
+    "My birthday date choices! 💜\n" +
+    "Place: " + chosenPlace + "\n" +
+    "Date: " + chosenDate + "\n" +
+    "Time: " + chosenTime;
+
+  if (navigator.share) {
+    navigator.share({
+      text: message
+    }).catch(() => {});
+  } else {
+    navigator.clipboard.writeText(message)
+      .then(() => {
+        alert(
+          "Copied! Send your choices to me 💌"
+        );
+      });
+  }
+}
+
+</script>
+
+</body>
+</html>
